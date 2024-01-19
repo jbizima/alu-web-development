@@ -1,4 +1,4 @@
-    #!/usr/bin/python3
+#!/usr/bin/python3
 '''
 Create LFUCache class that inherits from BaseCaching
 '''
@@ -48,4 +48,3 @@ class LFUCache(BaseCaching):
                     self.queue.insert(self.queue.index(key) + 1,
                                       self.queue.pop(self.queue.index(key)))
         return self.cache_data.get(key)
-        
