@@ -4,7 +4,6 @@
 from flask import jsonify, abort
 from api.v1.views import app_views
 
-
 @app_views.route('/status', methods=['GET'], strict_slashes=False)
 def status() -> str:
     """ GET /api/v1/status
@@ -13,28 +12,29 @@ def status() -> str:
     """
     return jsonify({"status": "OK"})
 
-
-@app_views.route('/stats/', methods=['GET'], strict_slashes=False)
+@app_views.route('/stats/', strict_slashes=False)
 def stats() -> str:
     """ GET /api/v1/stats
     Return:
-      - the number of each object
+      - the number of each objects
     """
     from models.user import User
-    stats = {'users': User.count()}
+    stats = {}
+    stats['users'] = User.count()
     return jsonify(stats)
 
-
-@app_views.route('/unauthorized', methods=['GET'], strict_slashes=False)
+@app_views.route('/unauthorized', strict_slashes=False)
 def unauthorized() -> str:
-    """ GET /api/v1/unauthorized
-    Raises:
-      - 401 error
+    """ GET /api/v1/unauthorized/
+    Return:
+      - abort(401)
     """
     abort(401)
 
-
-if __name__ == "__main__":
-    host = getenv("API_HOST", "0.0.0.0")
-    port = getenv("API_PORT", "5000")
-    app_views.run(host=host, port=port)
+@app_views.route('/forbidden', strict_slashes=False)
+def forbidden() -> str:
+    """ GET /api/v1/forbidden/
+    Return:
+      - abort(403)
+    """
+    abort(403)
