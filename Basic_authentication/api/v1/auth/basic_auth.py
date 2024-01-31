@@ -3,9 +3,9 @@
 Basic auth class
 """
 
-from api.v1.auth.auth import Auth
 import base64
 from typing import TypeVar
+from api.v1.auth.auth import Auth
 from models.user import User
 
 
@@ -20,7 +20,7 @@ class BasicAuth(Auth):
         """extract base64 auth header"""
         if authorization_header is None:
             return None
-        if type(authorization_header) is not str:
+        if not isinstance(authorization_header, str):
             return None
         if not authorization_header.startswith("Basic "):
             return None
@@ -33,7 +33,7 @@ class BasicAuth(Auth):
         """decode base64 auth header"""
         if base64_authorization_header is None:
             return None
-        if type(base64_authorization_header) is not str:
+        if not isinstance(base64_authorization_header, str):
             return None
         try:
             return base64.b64decode(
@@ -48,7 +48,7 @@ class BasicAuth(Auth):
         """extract user credentials"""
         if decoded_base64_authorization_header is None:
             return None, None
-        if type(decoded_base64_authorization_header) is not str:
+        if not isinstance(decoded_base64_authorization_header, str):
             return None, None
         if ":" not in decoded_base64_authorization_header:
             return None, None
@@ -60,20 +60,19 @@ class BasicAuth(Auth):
             user_pwd: str
             ) -> TypeVar('User'):
         """user object from credentials"""
-        if user_email is None or type(user_email) is not str:
+        if user_email is None or not isinstance(user_email, str):
             return None
-        if user_pwd is None or type(user_pwd) is not str:
+        if user_pwd is None or not isinstance(user_pwd, str):
             return None
 
         users = User.search({'email': user_email})
 
-        if not users:
+        if not users or len(users) == 0:
             return None
-        if users is None or len(users) == 0:
-            return None
-        for user in users:
-            if user.is_valid_password(user_pwd):
-                return user
+
+        user = users[0]  # Assuming you want the first user if there are multiple
+        if user.is_valid_password(user_pwd):
+            return user
         return None
 
     def current_user(self, request=None) -> TypeVar('User'):
