@@ -44,5 +44,3 @@ def forbidden() -> str:
     """
     error_message = 'Forbidden: You are not allowed to access this resource.'
     abort(403, description=error_message)
-
-# No need for a separate error handler for 403; Flask will use the default error handler
