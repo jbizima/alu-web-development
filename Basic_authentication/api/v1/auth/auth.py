@@ -5,6 +5,7 @@ Class to manage API authentication
 from flask import request
 from typing import List, TypeVar
 
+
 class Auth:
     """Class to manage API authentication
     """
@@ -17,7 +18,7 @@ class Auth:
         if path[-1] != '/':
             path += '/'
         for p in excluded_paths:
-            if path.startswith(p.rstrip('/')):
+            if path[:p.find('*')] in p[:p.find('*')]:
                 return False
         return True
 
